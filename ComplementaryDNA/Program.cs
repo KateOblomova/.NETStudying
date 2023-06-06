@@ -16,38 +16,31 @@ Example: (input --> output)
 
  */
 
+using System.Text.RegularExpressions;
+
 static string MakeComplement(string dna)
 {
-    char[] newDna = dna.ToCharArray();
-    for (int i = 0; i < newDna.Length; i++)
+    if (string.IsNullOrEmpty(dna)) return string.Empty;
+
+    string pattern = @"(T|A|G|C)";
+    string antiPattern = @"[^ATCG]+";
+
+    if (Regex.IsMatch(dna, antiPattern)) return string.Empty;
+
+    if (!Regex.IsMatch(dna, pattern)) return string.Empty;
+
+    var matches = Regex.Replace(dna, pattern, r =>
     {
-        if (newDna[i] == 'A')
-        {
-            newDna[i] = 'T';
-        }
-        else
-        {
-            if (newDna[i] == 'T')
-            {
-                newDna[i] = 'A';
-            }
-        }
+        if (r.Value == "A")
+            return "T";
+        if (r.Value == "T")
+            return "A";
+        if (r.Value == "C")
+            return "G";
+        if (r.Value == "G")
+            return "C";
+        else r.NextMatch(); return string.Empty;
+    });
 
-        if (newDna[i] == 'C')
-        {
-            newDna[i] = 'G';
-        }
-
-        else
-        {
-            if (newDna[i] == 'G')
-            {
-                newDna[i] = 'C';
-            }
-        }
-    }
-
-    var output = new string(newDna);
-
-    return output;
+    return matches;
 }
