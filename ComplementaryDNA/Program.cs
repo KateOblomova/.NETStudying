@@ -20,10 +20,10 @@ using System.Text.RegularExpressions;
 
 static string MakeComplement(string dna)
 {
-    if (string.IsNullOrEmpty(dna)) return string.Empty;
-
     string pattern = @"(T|A|G|C)";
     string antiPattern = @"[^ATCG]+";
+
+    if (string.IsNullOrEmpty(dna)) return string.Empty;
 
     if (Regex.IsMatch(dna, antiPattern)) return string.Empty;
 
@@ -31,15 +31,18 @@ static string MakeComplement(string dna)
 
     var matches = Regex.Replace(dna, pattern, r =>
     {
-        if (r.Value == "A")
-            return "T";
-        if (r.Value == "T")
-            return "A";
-        if (r.Value == "C")
-            return "G";
-        if (r.Value == "G")
-            return "C";
-        else r.NextMatch(); return string.Empty;
+        switch (r.Value)
+        {
+            case "A":
+                return "T";
+            case "T":
+                return "A";
+            case "C":
+                return "G";
+            case "G":
+                return "C";
+            default: return string.Empty;
+        }
     });
 
     return matches;
