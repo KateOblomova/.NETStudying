@@ -28,35 +28,56 @@ MorseCodeDecoder.Decode(".... . -.--   .--- ..- -.. .")
 
 static string Decode(string morseCode)
 {
-    string[] englishAlphabet = new string[] { "A", "B", "C", "D", "E", "F", "G",
-        "H", "I", "J", "K", "L", "M",
-        "N", "O", "P", "Q", "R", "S",
-        "T", "U", "V", "W", "X", "Y", "Z", "SOS", "!", "?", "." };
-    string[] morseAlphabet = new string[] {".-", "-...", "-.-.", "-..", ".",
-    "..-.", "--.", "....", "..", ".---", "-.-",".-..", "--", "-.",
-    "---", ".--.", "--.-", ".-.", "...", "-",
-    "..-", "...-", ".--", "-..-", "-.--", "--..", "...---...", "-.-.--", "..--..", ".-.-.-"};
-    if (morseCode.StartsWith(" "))
+    var dictionary = new Dictionary<string, string>()
     {
-        morseCode = morseCode.Trim();
-    }
+        {"A", ".-"},
+        {"B", "-..."},
+        {"C", "-.-."},
+        {"D", "-.."},
+        {"E", "."},
+        {"F", "..-."},
+        {"G", "--."},
+        {"H", "...."},
+        {"I", ".."},
+        {"J", ".---"},
+        {"K", "-.-"},
+        {"L", ".-.."},
+        {"M", "--"},
+        {"N", "-."},
+        {"O", "---"},
+        {"P", ".--."},
+        {"Q", "--.-"},
+        {"R", ".-."},
+        {"S", "..."},
+        {"T", "-"},
+        {"U", "..-"},
+        {"V", "...-"},
+        {"W", ".--"},
+        {"X", "-..-"},
+        {"Y", "-.--"},
+        {"Z", "--.."},
+        {"SOS", "...---..."},
+        {"!", "-.-.--"},
+        {"?", "..--.."},
+        {".", ".-.-.-"},
+    };
+
+    morseCode = morseCode.TrimStart();
+
     string[] arrayOfWords = morseCode.Split("   ");
     string[] decodedArray = new string[arrayOfWords.Length];
 
     for (int i = 0; i < arrayOfWords.Length; i++)
     {
-
         string[] codedLine = arrayOfWords[i].Split(" ");
-        string[] temp = new string[codedLine.Length];
+        var temp = new List<string>();
 
-        for (int n = 0; n < morseAlphabet.Length; n++)
+        for (int n = 0; n < codedLine.Length; n++)
         {
-            for (int j = 0; j < codedLine.Length; j++)
+            foreach (var symbol in dictionary)
             {
-                if (codedLine[j] == morseAlphabet[n])
-                {
-                    temp[j] = englishAlphabet[n];
-                }
+                if (symbol.Value == codedLine[n])
+                    temp.Add(symbol.Key);
             }
         }
         decodedArray[i] = string.Join(" ", temp);
